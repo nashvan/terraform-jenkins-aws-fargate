@@ -10,17 +10,10 @@ variable "public_subnets" {
 }
 
 #################### General variables
-
 variable "route53_zone_name" {
   description = "A Route53 zone name to use to create a DNS record for the Jenkins Master. Required for HTTPs."
   type        = string
   default     = ""
-}
-
-variable "route53_subdomain" {
-  description = "The subdomain to use for Jenkins Master. Used when var.route53_zone_name is not empty"
-  type        = string
-  default     = "jenkins"
 }
 
 variable "fargate_platform_version" {
@@ -33,9 +26,23 @@ variable "default_tags" {
   description = "Default tags to apply to the resources"
   type        = map(string)
   default = {
-    Application = "Jenkins"
-    Environment = "test"
-    Terraform   = "True"
+    Application   = "Jenkins"
+    ServiceName   = "krd"
+    Environment   = "develop"
+    ApplicationID = "JNKS321"
+    CostCentre    = "KRD-JNKS"
+  }
+}
+
+variable "tags" {
+  description = "Default tags to apply to the resources"
+  type        = map(string)
+  default = {
+    Application   = "Jenkins"
+    ServiceName   = "krd"
+    Environment   = "develop"
+    ApplicationID = "JNKS321"
+    CostCentre    = "KRD-JNKS"
   }
 }
 
@@ -152,4 +159,45 @@ variable "efs_burst_credit_balance_threshold" {
   type        = number
   description = "Threshold below which the metric BurstCreditBalance associated alarm will be triggered. Expressed in bytes"
   default     = 1154487209164 // half of the default credits
+}
+
+######
+
+# variable "prefix_name" {
+#   type        = string
+#   description = "the prefix name for the resources"
+# }
+
+variable "cost_centre" {
+  type        = string
+  description = "Project cost centre tag value"
+}
+
+variable "application_id" {
+  type        = string
+  description = "Application ID tag value"
+}
+
+variable "service_name" {
+  type        = string
+  description = "Service name used to namespace the resources created in AWS"
+  default     = "krd"
+}
+
+variable "app_name" {
+  type        = string
+  description = "Application name used to namespace the resources created in AWS"
+  default     = "jenkins"
+}
+
+variable "environment" {
+  type        = string
+  description = "Environment name for namespacing the resources created in AWS"
+  default     = "develop"
+}
+
+variable "owner" {
+  default     = "Nash Support"
+  type        = string
+  description = "The resource owner to tag all the resources with"
 }
