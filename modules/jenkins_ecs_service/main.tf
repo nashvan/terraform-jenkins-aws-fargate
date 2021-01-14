@@ -73,7 +73,7 @@ resource "aws_ecs_task_definition" "jenkins_master" {
 
   container_definitions = templatefile("${path.module}/templates/ecs-task.template.json", {
     image             = var.master_docker_image
-    region            = var.aws_region
+    region            = local.aws_region
     log_group_name    = aws_cloudwatch_log_group.jenkins_master.id
     jenkins_http_port = var.master_listening_port
     jenkins_jnlp_port = var.master_jnlp_port

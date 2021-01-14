@@ -1,7 +1,7 @@
 locals {
   jcas = templatefile("${path.module}/templates/jcasc.template.yml", {
     ecs_cluster_arn              = aws_ecs_cluster.cluster.arn
-    region_name                  = var.aws_region
+    region_name                  = local.aws_region
     agents_sg_ids                = join(",", [aws_security_group.jenkins_agents.id])
     agents_subnet_ids            = join(",", var.private_subnets)
     agents_log_group             = aws_cloudwatch_log_group.agents.name

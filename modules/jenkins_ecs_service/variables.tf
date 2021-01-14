@@ -15,11 +15,6 @@ variable "vpc_id" {
 }
 
 #################### General variables
-variable "aws_region" {
-  description = "The AWS region in which deploy the resources"
-  type        = string
-  default     = "eu-west-1"
-}
 
 variable "route53_zone_name" {
   description = "A Route53 zone name to use to create a DNS record for the Jenkins Master. Required for HTTPs."
