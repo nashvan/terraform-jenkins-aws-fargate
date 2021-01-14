@@ -76,7 +76,7 @@ resource "aws_ecs_task_definition" "jenkins_master" {
   memory                   = var.master_cpu_memory.memory
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
-  tags                     = var.default_tags
+  tags                     = var.tags
 
   volume {
     name = local.efs_volume_name
@@ -114,7 +114,7 @@ resource "aws_ecs_service" "jenkins_master" {
   desired_count    = 1 # only one master should be up and running. Open Source version of Jenkins is not adapted for multi masters mode
   launch_type      = "FARGATE"
   platform_version = var.fargate_platform_version
-  tags             = var.default_tags
+  tags             = var.tags
 
   deployment_minimum_healthy_percent = var.master_deployment_percentages.min
   deployment_maximum_percent         = var.master_deployment_percentages.max
