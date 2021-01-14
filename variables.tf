@@ -9,28 +9,11 @@ variable "public_subnets" {
   type        = set(string)
 }
 
-variable "vpc_id" {
-  description = "The VPC id"
-  type        = string
-}
-
 #################### General variables
-variable "aws_region" {
-  description = "The AWS region in which deploy the resources"
-  type        = string
-  default     = "eu-west-1"
-}
-
 variable "route53_zone_name" {
   description = "A Route53 zone name to use to create a DNS record for the Jenkins Master. Required for HTTPs."
   type        = string
   default     = ""
-}
-
-variable "route53_subdomain" {
-  description = "The subdomain to use for Jenkins Master. Used when var.route53_zone_name is not empty"
-  type        = string
-  default     = "jenkins"
 }
 
 variable "fargate_platform_version" {
@@ -43,12 +26,11 @@ variable "default_tags" {
   description = "Default tags to apply to the resources"
   type        = map(string)
   default = {
-    Application   = var.app_name
-    ServiceName   = var.service_name
-    Environment   = var.environment
-    ApplicationID = var.application_id
-    CostCentre    = var.cost_centre
-    ServiceName   = var.service_name
+    Application   = "Jenkins"
+    ServiceName   = "krd"
+    Environment   = "develop"
+    ApplicationID = "JNKS321"
+    CostCentre    = "KRD-JNKS"
   }
 }
 
@@ -56,12 +38,11 @@ variable "tags" {
   description = "Default tags to apply to the resources"
   type        = map(string)
   default = {
-    Application   = var.app_name
-    ServiceName   = var.service_name
-    Environment   = var.environment
-    ApplicationID = var.application_id
-    CostCentre    = var.cost_centre
-    ServiceName   = var.service_name
+    Application   = "Jenkins"
+    ServiceName   = "krd"
+    Environment   = "develop"
+    ApplicationID = "JNKS321"
+    CostCentre    = "KRD-JNKS"
   }
 }
 
@@ -219,9 +200,4 @@ variable "owner" {
   default     = "Nash Support"
   type        = string
   description = "The resource owner to tag all the resources with"
-}
-
-variable "record_set_name" {
-  type        = string
-  description = "Name of the zone that will be used by the Route 53 record of the cluster's ALB"
 }

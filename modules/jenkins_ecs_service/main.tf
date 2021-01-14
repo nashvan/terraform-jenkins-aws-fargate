@@ -3,7 +3,7 @@ locals {
   jenkins_master_container_name = "jenkins-master"
   jenkins_home                  = "/var/jenkins_home" # Jenkins home inside the container. This is hard coded in the official docker image
   efs_volume_name               = "jenkins-efs-configuration"
-  jenkins_host                  = "${var.route53_subdomain}.${var.route53_zone_name}"
+  jenkins_host                  = "${var.app_name}.${var.environment}.${var.route53_zone_name}"
   jenkins_public_url            = var.route53_zone_name != "" ? "https://${local.jenkins_host}" : "http://${aws_alb.alb_jenkins_master.dns_name}"
 }
 

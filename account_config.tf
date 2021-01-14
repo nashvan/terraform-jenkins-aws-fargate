@@ -14,15 +14,15 @@ locals {
 
   account_configs = {
     develop = {
-      record_set_name = "cmcloudlab396.info."
+      route53_zone_name = "cmcloudlab396.info."
     }
 
     sit = {
-      record_set_name = "cmcloudlab872.info."
+      route53_zone_name = "cmcloudlab872.info."
     }
 
     prod = {
-      record_set_name = "cmcloudlab1725.info."
+      route53_zone_name = "cmcloudlab1725.info."
     }
   }
 

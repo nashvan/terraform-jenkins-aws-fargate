@@ -1,11 +1,11 @@
 variable "service_name" {
-  default     = "xyz"
+  default     = "krd"
   type        = string
   description = "The service name that all resources will be tagged with"
 }
 
 variable "app_name" {
-  default     = "abc"
+  default     = "jenkins"
   type        = string
   description = "The app name that all resources will be tagged with"
 }

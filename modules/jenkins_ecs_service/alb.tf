@@ -14,8 +14,8 @@ resource "aws_alb_target_group" "jenkins_master_tg" {
   port        = var.master_listening_port
   target_type = "ip"
   protocol    = "HTTP"
-  vpc_id      = var.vpc_id
-  tags        = var.default_tags
+  vpc_id      = data.aws_vpc.vpc.id
+  tags        = var.tags
 
   stickiness {
     type    = "lb_cookie"

@@ -9,11 +9,6 @@ variable "public_subnets" {
   type        = set(string)
 }
 
-variable "vpc_id" {
-  description = "The VPC id"
-  type        = string
-}
-
 #################### General variables
 
 variable "route53_zone_name" {

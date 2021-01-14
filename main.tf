@@ -14,7 +14,7 @@ module "ecs_jenkins" {
   container_port        = 8080
   JenkinsJNLPPort       = 50000
   health_check_path     = "/login"
-  record_set_name       = local.account_config["record_set_name"]
+  route53_zone_name     = local.account_config["route53_zone_name"]
   # cluster_name          = "krd-jenkins-develop-ecs-cluster"
   # cluster_arn           = data.aws_ecs_cluster.ecs_cluster.arn
   prefix_name           = "${local.service_name}-${local.app_name}-${var.environment}"

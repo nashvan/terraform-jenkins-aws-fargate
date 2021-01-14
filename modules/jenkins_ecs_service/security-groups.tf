@@ -1,15 +1,15 @@
 resource "aws_security_group" "jenkins_master_sg" {
   name        = "sgr-jenkins-master-service"
   description = "Jenkins Master ECS service security group."
-  vpc_id      = var.vpc_id
-  tags        = merge({ "Name" : "sgr-jenkins-master-service" }, var.default_tags)
+  vpc_id      = data.aws_vpc.vpc.id
+  tags        = merge({ "Name" : "sgr-jenkins-master-service" }, var.tags)
 }
 
 resource "aws_security_group" "alb_security_group" {
   name        = "sgr-jenkins-master-alb"
   description = "Jenkins Master ALB security group."
-  vpc_id      = var.vpc_id
-  tags        = merge({ "Name" : "sgr-jenkins-master-alb" }, var.default_tags)
+  vpc_id      = data.aws_vpc.vpc.id
+  tags        = merge({ "Name" : "sgr-jenkins-master-alb" }, var.tags)
 }
 
 resource "aws_security_group_rule" "alb_ingress_http" {
@@ -86,8 +86,8 @@ resource "aws_security_group_rule" "master_egress_all" {
 resource "aws_security_group" "jenkins_agents" {
   name        = "sgr-jenkins-agents"
   description = "Security group attached to Jenkins agents running in Fargate."
-  vpc_id      = var.vpc_id
-  tags        = merge({ "Name" : "sgr-jenkins-agents" }, var.default_tags)
+  vpc_id      = data.aws_vpc.vpc.id
+  tags        = merge({ "Name" : "sgr-jenkins-agents" }, var.tags)
 }
 
 resource "aws_security_group_rule" "jenkins_agent_egress" {
@@ -103,8 +103,8 @@ resource "aws_security_group_rule" "jenkins_agent_egress" {
 resource "aws_security_group" "efs" {
   name        = "sgr-jenkins-master-efs"
   description = "Jenkins Master EFS security group."
-  vpc_id      = var.vpc_id
-  tags        = merge({ "Name" : "sgr-jenkins-master-efs" }, var.default_tags)
+  vpc_id      = data.aws_vpc.vpc.id
+  tags        = merge({ "Name" : "sgr-jenkins-master-efs" }, var.tags)
 }
 
 resource "aws_security_group_rule" "allow_jenkins_to_efs" {

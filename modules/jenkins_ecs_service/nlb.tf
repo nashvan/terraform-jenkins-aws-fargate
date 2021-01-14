@@ -17,8 +17,8 @@ resource "aws_lb_target_group" "nlb_agents_to_master_http" {
   target_type = "ip"
   port        = var.master_listening_port
   protocol    = "TCP"
-  vpc_id      = var.vpc_id
-  tags        = var.default_tags
+  vpc_id      = data.aws_vpc.vpc.id
+  tags        = var.tags
 
   health_check {
     path                = "/login"
@@ -56,8 +56,8 @@ resource "aws_lb_target_group" "nlb_agents_to_master_jnlp" {
   target_type = "ip"
   port        = var.master_jnlp_port
   protocol    = "TCP"
-  vpc_id      = var.vpc_id
-  tags        = var.default_tags
+  vpc_id      = data.aws_vpc.vpc.id
+  tags        = var.tags
 
   # FIXMe: looks like we can't put the health check on the jnlp port
   health_check {
