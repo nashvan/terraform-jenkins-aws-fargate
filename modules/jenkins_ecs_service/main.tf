@@ -1,14 +1,3 @@
-terraform {
-  required_version = ">= 0.12"
-
-  required_providers {
-    aws = ">= 2.68"
-  }
-}
-
-provider "aws" {
-  region = var.aws_region
-}
 
 locals {
   jenkins_master_container_name = "jenkins-master"
@@ -20,11 +9,6 @@ locals {
 
 data "aws_caller_identity" "caller" {}
 
-data "aws_route53_zone" "dns_zone" {
-  count        = var.route53_zone_name != "" ? 1 : 0
-  name         = var.route53_zone_name
-  private_zone = false
-}
 
 # The cluster for Jenkins Master and agents
 resource "aws_ecs_cluster" "cluster" {
@@ -157,6 +141,12 @@ resource "aws_ecs_service" "jenkins_master" {
 }
 
 ############ Route53 and ACM
+data "aws_route53_zone" "dns_zone" {
+  count        = var.route53_zone_name != "" ? 1 : 0
+  name         = var.route53_zone_name
+  private_zone = false
+}
+
 resource "aws_acm_certificate" "master_certificate" {
   count             = var.route53_zone_name != "" ? 1 : 0
   domain_name       = local.jenkins_host
