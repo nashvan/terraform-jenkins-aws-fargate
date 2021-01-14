@@ -43,9 +43,25 @@ variable "default_tags" {
   description = "Default tags to apply to the resources"
   type        = map(string)
   default = {
-    Application = "Jenkins"
-    Environment = "test"
-    Terraform   = "True"
+    Application   = var.app_name
+    ServiceName   = var.service_name
+    Environment   = var.environment
+    ApplicationID = var.application_id
+    CostCentre    = var.cost_centre
+    ServiceName   = var.service_name
+  }
+}
+
+variable "tags" {
+  description = "Default tags to apply to the resources"
+  type        = map(string)
+  default = {
+    Application   = var.app_name
+    ServiceName   = var.service_name
+    Environment   = var.environment
+    ApplicationID = var.application_id
+    CostCentre    = var.cost_centre
+    ServiceName   = var.service_name
   }
 }
 
@@ -162,4 +178,50 @@ variable "efs_burst_credit_balance_threshold" {
   type        = number
   description = "Threshold below which the metric BurstCreditBalance associated alarm will be triggered. Expressed in bytes"
   default     = 1154487209164 // half of the default credits
+}
+
+######
+
+# variable "prefix_name" {
+#   type        = string
+#   description = "the prefix name for the resources"
+# }
+
+variable "cost_centre" {
+  type        = string
+  description = "Project cost centre tag value"
+}
+
+variable "application_id" {
+  type        = string
+  description = "Application ID tag value"
+}
+
+variable "service_name" {
+  type        = string
+  description = "Service name used to namespace the resources created in AWS"
+  default     = "krd"
+}
+
+variable "app_name" {
+  type        = string
+  description = "Application name used to namespace the resources created in AWS"
+  default     = "jenkins"
+}
+
+variable "environment" {
+  type        = string
+  description = "Environment name for namespacing the resources created in AWS"
+  default     = "develop"
+}
+
+variable "owner" {
+  default     = "Nash Support"
+  type        = string
+  description = "The resource owner to tag all the resources with"
+}
+
+variable "record_set_name" {
+  type        = string
+  description = "Name of the zone that will be used by the Route 53 record of the cluster's ALB"
 }

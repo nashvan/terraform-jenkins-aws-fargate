@@ -2,7 +2,7 @@
 # Jenkins Master
 # ----------------------------------------------------------
 module "ecs_jenkins" {
-  source = "./modules"
+  source = "./modules/jenkins_ecs_service"
 
   environment           = var.environment
   app_name              = "jenkins"
