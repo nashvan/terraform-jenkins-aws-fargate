@@ -10,14 +10,12 @@ module "ecs_jenkins" {
   cost_centre           = local.cost_centre
   service_name          = local.service_name
 
-  container_count       = 1
-  container_port        = 8080
-  JenkinsJNLPPort       = 50000
-  health_check_path     = "/login"
+  # container_port        = 8080
+  # container_count       = 1
+  # JenkinsJNLPPort       = 50000
   route53_zone_name     = local.account_config["route53_zone_name"]
   # cluster_name          = "krd-jenkins-develop-ecs-cluster"
   # cluster_arn           = data.aws_ecs_cluster.ecs_cluster.arn
-  prefix_name           = "${local.service_name}-${local.app_name}-${var.environment}"
 
   tags = {
     ApplicationID = local.application_id
@@ -27,10 +25,6 @@ module "ecs_jenkins" {
   }
 }
 
-output "jenkins_url" {
-  value = module.ecs_jenkins.load_balancer_dns_name
-}
-
-# ----------------------------------------------------------
-# Extra IAM policy 
-# ----------------------------------------------------------
+# output "jenkins_url" {
+#   value = module.ecs_jenkins.load_balancer_dns_name
+# }

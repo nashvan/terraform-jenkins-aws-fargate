@@ -36,6 +36,6 @@ data aws_security_group vpc_default_sg {
   name   = "default"
 }
 
-data aws_ecr_repository service {
-  name = "jenkins"
-}
+# data aws_ecr_repository service {
+#   name = "jenkins"
+# }
