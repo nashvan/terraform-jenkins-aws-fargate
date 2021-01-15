@@ -11,7 +11,7 @@ data "aws_iam_policy_document" "ecs_assume_role_policy" {
 
 ################################### Master ECS execution role
 resource "aws_iam_role" "master_ecs_execution_role" {
-  name                  = "jenkins-master-ecs-execution"
+  name                  = "${local.prefix}-jenkins-master-ecs-execution"
   description           = "Role used by ECS to push Jenkins Master logs to Cloudwatch and access ECR."
   assume_role_policy    = data.aws_iam_policy_document.ecs_assume_role_policy.json
   force_detach_policies = true
@@ -25,7 +25,7 @@ resource "aws_iam_role_policy_attachment" "master_execution_policy" {
 
 ################################### Master ECS task role
 resource "aws_iam_role" "master_ecs_task_role" {
-  name                  = "jenkins-master-ecs-task"
+  name                  = "${local.prefix}-jenkins-master-ecs-task"
   description           = "Role used by the Jenkins Master to access AWS resources."
   assume_role_policy    = data.aws_iam_policy_document.ecs_assume_role_policy.json
   force_detach_policies = true
@@ -33,7 +33,7 @@ resource "aws_iam_role" "master_ecs_task_role" {
 }
 
 resource "aws_iam_policy" "master_ecs_task" {
-  name        = "jenkins-master-ecs-task-role-policy"
+  name        = "${local.prefix}-jenkins-master-ecs-task-role-policy"
   description = "Policy for Jenkins Master task role."
   policy      = data.aws_iam_policy_document.master_ecs_task.json
 }
@@ -113,7 +113,7 @@ data "aws_iam_policy_document" "master_ecs_task" {
 
 ################################### Agents execution Role
 resource "aws_iam_role" "agents_ecs_execution_role" {
-  name                  = "jenkins-agents-ecs-execution"
+  name                  = "${local.prefix}-jenkins-agents-ecs-execution"
   description           = "Role used by ECS to push Jenkins agents logs to Cloudwatch and access ECR."
   assume_role_policy    = data.aws_iam_policy_document.ecs_assume_role_policy.json
   force_detach_policies = true
@@ -128,7 +128,7 @@ resource "aws_iam_role_policy_attachment" "agents_execution_policy" {
 
 ################################### Agents task Role
 resource "aws_iam_role" "agents_ecs_task_role" {
-  name                  = "jenkins-agents-ecs-task"
+  name                  = "${local.prefix}-jenkins-agents-ecs-task"
   description           = "Example of role attached to the agents."
   assume_role_policy    = data.aws_iam_policy_document.ecs_assume_role_policy.json
   force_detach_policies = true

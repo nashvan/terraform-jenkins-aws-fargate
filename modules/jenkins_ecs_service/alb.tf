@@ -1,5 +1,5 @@
 resource "aws_alb" "alb_jenkins_master" {
-  name                       = "alb-jenkins-master"
+  name                       = "${local.prefix}-alb-jenkins-master"
   internal                   = false
   load_balancer_type         = "application"
   security_groups            = [aws_security_group.alb_security_group.id]
@@ -11,7 +11,7 @@ resource "aws_alb" "alb_jenkins_master" {
 }
 
 resource "aws_alb_target_group" "jenkins_master_tg" {
-  name        = "alb-http-jenkins-master"
+  name        = "${local.prefix}-http-jenkins-master-tg"
   port        = var.master_listening_port
   target_type = "ip"
   protocol    = "HTTP"

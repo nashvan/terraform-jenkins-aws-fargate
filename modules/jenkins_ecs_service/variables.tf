@@ -98,13 +98,13 @@ variable "agents_log_retention_days" {
 variable "master_docker_image" {
   type        = string
   description = "Jenkins Master docker image to use"
-  default     = "elmhaidara/jenkins-aws-fargate:latest"
-}
+  default     = "nashvan/jenkins-master:latest"
+} 
 
 variable "example_agent_docker_image" {
   type        = string
   description = "Docker image to use for the example agent. See: https://hub.docker.com/r/jenkins/inbound-agent/"
-  default     = "elmhaidara/jenkins-alpine-agent-aws:latest"
+  default     = "nashvan/jenkins-alpine-agent:latest"
 }
 
 variable "master_listening_port" {
