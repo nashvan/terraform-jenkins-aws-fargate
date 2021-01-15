@@ -5,8 +5,6 @@ resource "aws_alb" "alb_jenkins_master" {
   security_groups            = [aws_security_group.alb_security_group.id]
   # subnets                    = var.public_subnets
   subnets                    = data.aws_subnet_ids.subnet_ids.ids
-  ip_address_type            = "ipv4"
-  enable_deletion_protection = false
   tags                       = var.tags
 }
 
@@ -29,13 +27,14 @@ resource "aws_alb_target_group" "jenkins_master_tg" {
     interval            = 45
     healthy_threshold   = 3
     unhealthy_threshold = 10
-    matcher             = "200"
-    port                = "traffic-port"
+    # matcher             = "200"
+    # port                = "traffic-port"
   }
 
   lifecycle {
     create_before_destroy = true
   }
+  depends_on = [ aws_alb.alb_jenkins_master ]
 }
 
 # This listener is used when dont't use https with the ALB

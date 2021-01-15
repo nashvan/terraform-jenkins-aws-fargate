@@ -171,20 +171,20 @@ resource "aws_acm_certificate" "master_certificate" {
   }
 }
 
-# resource "aws_route53_record" "certificate_validation_record" {
-#   count   = var.route53_zone_name != "" ? 1 : 0
-#   name    = list(aws_acm_certificate.master_certificate.0.domain_validation_options)[0].resource_record_name
-#   type    = list(aws_acm_certificate.master_certificate.0.domain_validation_options)[0].resource_record_type
-#   zone_id = data.aws_route53_zone.dns_zone.0.zone_id
-#   records = [list(aws_acm_certificate.master_certificate.0.domain_validation_options)[0].resource_record_value]
-#   ttl     = "60"
-# }
+resource "aws_route53_record" "certificate_validation_record" {
+  count   = var.route53_zone_name != "" ? 1 : 0
+  name    = tolist(aws_acm_certificate.master_certificate.0.domain_validation_options)[0].resource_record_name
+  type    = tolist(aws_acm_certificate.master_certificate.0.domain_validation_options)[0].resource_record_type
+  zone_id = data.aws_route53_zone.dns_zone.0.zone_id
+  records = [tolist(aws_acm_certificate.master_certificate.0.domain_validation_options)[0].resource_record_value]
+  ttl     = "60"
+}
 
-# resource "aws_acm_certificate_validation" "validation" {
-#   count                   = var.route53_zone_name != "" ? 1 : 0
-#   certificate_arn         = aws_acm_certificate.master_certificate.0.arn
-#   validation_record_fqdns = list(aws_route53_record.certificate_validation_record.0.fqdn)
-# }
+resource "aws_acm_certificate_validation" "validation" {
+  count                   = var.route53_zone_name != "" ? 1 : 0
+  certificate_arn         = aws_acm_certificate.master_certificate.0.arn
+  validation_record_fqdns = list(aws_route53_record.certificate_validation_record.0.fqdn)
+}
 
 resource "aws_route53_record" "alb_dns_record" {
   count   = var.route53_zone_name != "" ? 1 : 0

@@ -99,12 +99,16 @@ variable "master_docker_image" {
   type        = string
   description = "Jenkins Master docker image to use"
   default     = "nashvan/jenkins-master:latest"
+  # default     = "elmhaidara/jenkins-aws-fargate:latest"
+  # default     = "jenkins/jenkins:lts"
 } 
 
 variable "example_agent_docker_image" {
   type        = string
   description = "Docker image to use for the example agent. See: https://hub.docker.com/r/jenkins/inbound-agent/"
   default     = "nashvan/jenkins-alpine-agent:latest"
+  # default     = "elmhaidara/jenkins-alpine-agent-aws:latest"
+  # default     = "jenkins/jenkins:lts"
 }
 
 variable "master_listening_port" {
@@ -200,4 +204,10 @@ variable "owner" {
   default     = "Nash Support"
   type        = string
   description = "The resource owner to tag all the resources with"
+}
+
+variable "subject_alternative_names" {
+  description = "A list of domains that should be SANs in the issued certificate"
+  type        = list(string)
+  default     = []
 }
