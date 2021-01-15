@@ -1,13 +1,13 @@
 #################### REQUIRED parameters
-variable "private_subnets" {
-  description = "Private subnets to deploy Jenkins and the internal NLB"
-  type        = set(string)
-}
+# variable "private_subnets" {
+#   description = "Private subnets to deploy Jenkins and the internal NLB"
+#   type        = set(string)
+# }
 
-variable "public_subnets" {
-  description = "Public subnets to deploy the load balancer"
-  type        = set(string)
-}
+# variable "public_subnets" {
+#   description = "Public subnets to deploy the load balancer"
+#   type        = set(string)
+# }
 
 #################### General variables
 variable "route53_zone_name" {

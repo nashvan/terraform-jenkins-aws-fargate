@@ -3,7 +3,8 @@ resource "aws_lb" "nlb_agents" {
   name                             = "nlb-jenkins-agents"
   load_balancer_type               = "network"
   internal                         = true
-  subnets                          = var.private_subnets
+  # subnets                          = var.private_subnets
+  subnets                          = data.aws_subnet_ids.subnet_ids.ids
   enable_deletion_protection       = false
   enable_cross_zone_load_balancing = true
   tags                             = var.default_tags

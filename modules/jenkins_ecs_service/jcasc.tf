@@ -3,7 +3,8 @@ locals {
     ecs_cluster_arn              = aws_ecs_cluster.cluster.arn
     region_name                  = local.aws_region
     agents_sg_ids                = join(",", [aws_security_group.jenkins_agents.id])
-    agents_subnet_ids            = join(",", var.private_subnets)
+    # agents_subnet_ids            = join(",", var.private_subnets)
+    agents_subnet_ids            = join(",", data.aws_subnet_ids.subnet_ids.ids)
     agents_log_group             = aws_cloudwatch_log_group.agents.name
     agents_execution_role_arn    = aws_iam_role.agents_ecs_execution_role.arn
     agents_task_role_arn         = aws_iam_role.agents_ecs_task_role.arn
@@ -26,7 +27,7 @@ resource "random_password" "admin_password" {
 }
 
 resource "aws_s3_bucket" "jenkins_conf_bucket" {
-  bucket        = "jenkins-jcasc-${data.aws_caller_identity.caller.account_id}"
+  bucket        = "jenkins-jcasc-${data.aws_caller_identity.current.account_id}"
   acl           = "private"
   force_destroy = true
   tags          = var.default_tags

@@ -7,12 +7,11 @@ locals {
   jenkins_public_url            = var.route53_zone_name != "" ? "https://${local.jenkins_host}" : "http://${aws_alb.alb_jenkins_master.dns_name}"
 }
 
-data "aws_caller_identity" "caller" {}
-
-
-# The cluster for Jenkins Master and agents
+# --------------------------------------------------------------------------------------------------
+# ECS Cluster
+# --------------------------------------------------------------------------------------------------
 resource "aws_ecs_cluster" "cluster" {
-  name               = "jenkins-cluster"
+  name               = "${local.prefix}-jenkins-cluster"
   capacity_providers = ["FARGATE"]
   tags               = var.default_tags
 
@@ -22,23 +21,29 @@ resource "aws_ecs_cluster" "cluster" {
   }
 }
 
+# --------------------------------------------------------------------------------------------------
+# CW Log Groups
+# --------------------------------------------------------------------------------------------------
 resource "aws_cloudwatch_log_group" "jenkins_master" {
-  name              = "/jenkins/master"
+  name              = "${local.prefix}/jenkins/master"
   retention_in_days = var.master_log_retention_days
   tags              = var.default_tags
 }
 
 resource "aws_cloudwatch_log_group" "agents" {
-  name              = "/jenkins/agents"
+  name              = "${local.prefix}/jenkins/agents"
   retention_in_days = var.agents_log_retention_days
   tags              = var.default_tags
 }
 
+# --------------------------------------------------------------------------------------------------
+# EFS
+# --------------------------------------------------------------------------------------------------
 resource "aws_efs_file_system" "jenkins_conf" {
   performance_mode                = var.efs_performance_mode
   throughput_mode                 = var.efs_throughput_mode
   provisioned_throughput_in_mibps = var.efs_provisioned_throughput_in_mibps
-  tags                            = merge({ "Name" : "jenkins-master-configuration" }, var.default_tags)
+  tags                            = merge({ "Name" : "jenkins-master-configuration" }, var.tags)
 
   lifecycle_policy {
     transition_to_ia = "AFTER_30_DAYS"
@@ -46,12 +51,16 @@ resource "aws_efs_file_system" "jenkins_conf" {
 }
 
 resource "aws_efs_mount_target" "mount_targets" {
-  for_each        = var.private_subnets
+  # for_each        = var.private_subnets
+  for_each        = data.aws_subnet_ids.subnet_ids.ids
   file_system_id  = aws_efs_file_system.jenkins_conf.id
   subnet_id       = each.value
   security_groups = [aws_security_group.efs.id]
 }
 
+# --------------------------------------------------------------------------------------------------
+# EFS
+# --------------------------------------------------------------------------------------------------
 resource "aws_ecs_task_definition" "jenkins_master" {
   family                   = "jenkins-master"
   execution_role_arn       = aws_iam_role.master_ecs_execution_role.arn
@@ -105,8 +114,10 @@ resource "aws_ecs_service" "jenkins_master" {
 
   network_configuration {
     security_groups  = [aws_security_group.jenkins_master_sg.id]
-    subnets          = var.private_subnets
-    assign_public_ip = false
+    # subnets          = var.private_subnets
+    subnets          = data.aws_subnet_ids.subnet_ids.ids
+    # assign_public_ip = false 
+    assign_public_ip = true // only when its fargate
   }
 
   # alb http target group
@@ -140,7 +151,9 @@ resource "aws_ecs_service" "jenkins_master" {
   ]
 }
 
-############ Route53 and ACM
+# --------------------------------------------------------------------------------------------------
+# R53 and ACM
+# --------------------------------------------------------------------------------------------------
 data "aws_route53_zone" "dns_zone" {
   count        = var.route53_zone_name != "" ? 1 : 0
   name         = var.route53_zone_name

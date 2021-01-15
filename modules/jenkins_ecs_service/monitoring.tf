@@ -1,7 +1,7 @@
 resource "aws_sns_topic" "alarms_topic" {
   name         = "jenkins-alarms"
   display_name = "Topic for Jenkins alarms"
-  tags         = var.default_tags
+  tags         = var.tags
 }
 
 resource "aws_cloudwatch_metric_alarm" "efs_burst_credit_balance" {
@@ -17,7 +17,7 @@ resource "aws_cloudwatch_metric_alarm" "efs_burst_credit_balance" {
   treat_missing_data  = "notBreaching"
   alarm_actions       = [aws_sns_topic.alarms_topic.arn]
   ok_actions          = [aws_sns_topic.alarms_topic.arn]
-  tags                = var.default_tags
+  tags                = var.tags
 
   dimensions = {
     FileSystemId = aws_efs_file_system.jenkins_conf.id
@@ -37,7 +37,7 @@ resource "aws_cloudwatch_metric_alarm" "alb_too_many_5xx_errors" {
   treat_missing_data  = "notBreaching"
   alarm_actions       = [aws_sns_topic.alarms_topic.arn]
   ok_actions          = [aws_sns_topic.alarms_topic.arn]
-  tags                = var.default_tags
+  tags                = var.tags
 
   dimensions = {
     LoadBalancer = aws_alb.alb_jenkins_master.arn_suffix
@@ -57,7 +57,7 @@ resource "aws_cloudwatch_metric_alarm" "alb_healthy_host_count" {
   treat_missing_data  = "notBreaching"
   alarm_actions       = [aws_sns_topic.alarms_topic.arn]
   ok_actions          = [aws_sns_topic.alarms_topic.arn]
-  tags                = var.default_tags
+  tags                = var.tags
 
   dimensions = {
     TargetGroup  = aws_alb_target_group.jenkins_master_tg.arn_suffix
@@ -78,7 +78,7 @@ resource "aws_cloudwatch_metric_alarm" "jenkins_high_cpu" {
   treat_missing_data  = "notBreaching"
   alarm_actions       = [aws_sns_topic.alarms_topic.arn]
   ok_actions          = [aws_sns_topic.alarms_topic.arn]
-  tags                = var.default_tags
+  tags                = var.tags
 
   dimensions = {
     ClusterName = aws_ecs_cluster.cluster.name
@@ -100,7 +100,7 @@ resource "aws_cloudwatch_metric_alarm" "jenkins_high_memory" {
   treat_missing_data  = "notBreaching"
   alarm_actions       = [aws_sns_topic.alarms_topic.arn]
   ok_actions          = [aws_sns_topic.alarms_topic.arn]
-  tags                = var.default_tags
+  tags                = var.tags
 
   dimensions = {
     ClusterName = aws_ecs_cluster.cluster.name

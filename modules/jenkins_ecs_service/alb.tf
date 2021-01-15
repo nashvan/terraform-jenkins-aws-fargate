@@ -3,10 +3,11 @@ resource "aws_alb" "alb_jenkins_master" {
   internal                   = false
   load_balancer_type         = "application"
   security_groups            = [aws_security_group.alb_security_group.id]
-  subnets                    = var.public_subnets
+  # subnets                    = var.public_subnets
+  subnets                    = data.aws_subnet_ids.subnet_ids.ids
   ip_address_type            = "ipv4"
   enable_deletion_protection = false
-  tags                       = var.default_tags
+  tags                       = var.tags
 }
 
 resource "aws_alb_target_group" "jenkins_master_tg" {
@@ -28,6 +29,8 @@ resource "aws_alb_target_group" "jenkins_master_tg" {
     interval            = 45
     healthy_threshold   = 3
     unhealthy_threshold = 10
+    matcher             = "200"
+    port                = "traffic-port"
   }
 
   lifecycle {
