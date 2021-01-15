@@ -52,6 +52,7 @@ resource "aws_security_group_rule" "jenkins_master_ingress_alb" {
 
 resource "aws_security_group_rule" "allow_agents_to_jks_jnlp_port" {
   # count             = length(var.private_subnets)
+  count             = length(data.aws_subnet_ids.subnet_ids.ids)
   security_group_id = aws_security_group.jenkins_master_sg.id
   from_port         = var.master_jnlp_port
   to_port           = var.master_jnlp_port
@@ -64,6 +65,7 @@ resource "aws_security_group_rule" "allow_agents_to_jks_jnlp_port" {
 # When using a private nlb we need to have this rule for nlb health check to work.
 resource "aws_security_group_rule" "from_private_nlb_network_interfaces" {
   # count             = length(var.private_subnets)
+  count             = length(data.aws_subnet_ids.subnet_ids.ids)
   security_group_id = aws_security_group.jenkins_master_sg.id
   from_port         = var.master_listening_port
   to_port           = var.master_listening_port

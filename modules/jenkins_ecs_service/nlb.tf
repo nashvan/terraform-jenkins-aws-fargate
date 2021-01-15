@@ -101,6 +101,7 @@ data "aws_network_interfaces" "nlb_network_interfaces" {
 }
 
 data "aws_network_interface" "private_nlb_network_interface" {
-  count = length(var.private_subnets)
+  # count = length(var.private_subnets)
+  count   = length(data.aws_subnet_ids.subnet_ids.ids)
   id    = tolist(data.aws_network_interfaces.nlb_network_interfaces.ids)[count.index]
 }

@@ -15,7 +15,7 @@ resource "aws_iam_role" "master_ecs_execution_role" {
   description           = "Role used by ECS to push Jenkins Master logs to Cloudwatch and access ECR."
   assume_role_policy    = data.aws_iam_policy_document.ecs_assume_role_policy.json
   force_detach_policies = true
-  tags                  = var.default_tags
+  tags                  = var.tags
 }
 
 resource "aws_iam_role_policy_attachment" "master_execution_policy" {
@@ -29,7 +29,7 @@ resource "aws_iam_role" "master_ecs_task_role" {
   description           = "Role used by the Jenkins Master to access AWS resources."
   assume_role_policy    = data.aws_iam_policy_document.ecs_assume_role_policy.json
   force_detach_policies = true
-  tags                  = var.default_tags
+  tags                  = var.tags
 }
 
 resource "aws_iam_policy" "master_ecs_task" {
@@ -117,7 +117,7 @@ resource "aws_iam_role" "agents_ecs_execution_role" {
   description           = "Role used by ECS to push Jenkins agents logs to Cloudwatch and access ECR."
   assume_role_policy    = data.aws_iam_policy_document.ecs_assume_role_policy.json
   force_detach_policies = true
-  tags                  = var.default_tags
+  tags                  = var.tags
 }
 
 resource "aws_iam_role_policy_attachment" "agents_execution_policy" {
@@ -132,5 +132,5 @@ resource "aws_iam_role" "agents_ecs_task_role" {
   description           = "Example of role attached to the agents."
   assume_role_policy    = data.aws_iam_policy_document.ecs_assume_role_policy.json
   force_detach_policies = true
-  tags                  = var.default_tags
+  tags                  = var.tags
 }
