@@ -10,9 +10,6 @@ module "ecs_jenkins" {
   cost_centre           = local.cost_centre
   service_name          = local.service_name
 
-  # container_port        = 8080
-  # container_count       = 1
-  # JenkinsJNLPPort       = 50000
   route53_zone_name     = local.account_config["route53_zone_name"]
   # cluster_name          = "krd-jenkins-develop-ecs-cluster"
   # cluster_arn           = data.aws_ecs_cluster.ecs_cluster.arn

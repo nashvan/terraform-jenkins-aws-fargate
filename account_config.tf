@@ -14,7 +14,7 @@ locals {
 
   account_configs = {
     develop = {
-      route53_zone_name = "cmcloudlab1653.info"
+      route53_zone_name = "cmcloudlab834.info"
     }
 
     sit = {
