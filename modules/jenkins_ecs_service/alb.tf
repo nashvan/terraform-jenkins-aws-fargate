@@ -9,7 +9,7 @@ resource "aws_alb" "alb_jenkins_master" {
 }
 
 resource "aws_alb_target_group" "jenkins_master_tg" {
-  name        = "${local.prefix}-jnks-tg"
+  name        = "${var.app_name}-${var.environment}-master-tg"
   port        = var.master_listening_port
   target_type = "ip"
   protocol    = "HTTP"
@@ -49,7 +49,6 @@ resource "aws_lb_listener" "master_http" {
     target_group_arn = aws_alb_target_group.jenkins_master_tg.arn
   }
 }
-
 
 resource "aws_lb_listener" "master_http_redirect" {
   count             = var.route53_zone_name != "" ? 1 : 0

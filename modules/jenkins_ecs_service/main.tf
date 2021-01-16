@@ -1,5 +1,8 @@
 
 locals {
+  aws_region                    = data.aws_region.current.name
+  aws_account_id                = data.aws_caller_identity.current.account_id
+  prefix                        = "${var.service_name}-${var.app_name}-${var.environment}"
   jenkins_master_container_name = "jenkins-master"
   jenkins_home                  = "/var/jenkins_home" # Jenkins home inside the container. This is hard coded in the official docker image
   efs_volume_name               = "jenkins-efs-configuration"
@@ -13,7 +16,7 @@ locals {
 resource "aws_ecs_cluster" "cluster" {
   name               = "${local.prefix}-jenkins-cluster"
   capacity_providers = ["FARGATE"]
-  tags               = var.default_tags
+  tags               = var.tags
 
   setting {
     name  = "containerInsights"
@@ -27,13 +30,13 @@ resource "aws_ecs_cluster" "cluster" {
 resource "aws_cloudwatch_log_group" "jenkins_master" {
   name              = "${local.prefix}/jenkins/master"
   retention_in_days = var.master_log_retention_days
-  tags              = var.default_tags
+  tags              = var.tags
 }
 
 resource "aws_cloudwatch_log_group" "agents" {
   name              = "${local.prefix}/jenkins/agents"
   retention_in_days = var.agents_log_retention_days
-  tags              = var.default_tags
+  tags              = var.tags
 }
 
 # --------------------------------------------------------------------------------------------------
@@ -59,7 +62,7 @@ resource "aws_efs_mount_target" "mount_targets" {
 }
 
 # --------------------------------------------------------------------------------------------------
-# EFS
+# Task Definition
 # --------------------------------------------------------------------------------------------------
 resource "aws_ecs_task_definition" "jenkins_master" {
   family                   = "jenkins-master"
@@ -101,7 +104,7 @@ resource "aws_ecs_task_definition" "jenkins_master" {
 }
 
 resource "aws_ecs_service" "jenkins_master" {
-  name             = "jenkins-master"
+  name             = "jenkins-master-${var.environment}"
   cluster          = aws_ecs_cluster.cluster.id
   task_definition  = aws_ecs_task_definition.jenkins_master.arn
   desired_count    = 1 # only one master should be up and running. Open Source version of Jenkins is not adapted for multi masters mode
@@ -164,7 +167,7 @@ resource "aws_acm_certificate" "master_certificate" {
   count             = var.route53_zone_name != "" ? 1 : 0
   domain_name       = local.jenkins_host
   validation_method = "DNS"
-  tags              = merge({ Name = local.jenkins_host }, var.default_tags)
+  tags              = merge({ Name = local.jenkins_host }, var.tags)
 
   lifecycle {
     create_before_destroy = true

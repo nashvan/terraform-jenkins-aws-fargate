@@ -22,18 +22,6 @@ variable "fargate_platform_version" {
   default     = "1.4.0"
 }
 
-variable "default_tags" {
-  description = "Default tags to apply to the resources"
-  type        = map(string)
-  default = {
-    Application   = "Jenkins"
-    ServiceName   = "krd"
-    Environment   = "develop"
-    ApplicationID = "JNKS321"
-    CostCentre    = "KRD-JNKS"
-  }
-}
-
 variable "tags" {
   description = "Default tags to apply to the resources"
   type        = map(string)

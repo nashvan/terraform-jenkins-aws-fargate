@@ -30,7 +30,7 @@ resource "aws_s3_bucket" "jenkins_conf_bucket" {
   bucket        = "jenkins-jcasc-${data.aws_caller_identity.current.account_id}"
   acl           = "private"
   force_destroy = true
-  tags          = var.default_tags
+  tags          = var.tags
 
   versioning {
     enabled = true
@@ -44,5 +44,5 @@ resource "aws_s3_bucket_object" "jenkins_conf" {
   content_type = "application/x-yaml"
   etag         = md5(local.jcas) # Used to force the update of the object version id when the configuration changes
   content      = local.jcas
-  tags         = var.default_tags
+  tags         = var.tags
 }

@@ -1,43 +1,11 @@
+# ---------------------------------------------------
+# Jenkins Master Security Group
+# ---------------------------------------------------
 resource "aws_security_group" "jenkins_master_sg" {
-  name        = "sgr-jenkins-master-service"
+  name        = "${local.prefix}-jenkins-master-service-sgr"
   description = "Jenkins Master ECS service security group."
   vpc_id      = data.aws_vpc.vpc.id
   tags        = merge({ "Name" : "sgr-jenkins-master-service" }, var.tags)
-}
-
-resource "aws_security_group" "alb_security_group" {
-  name        = "sgr-jenkins-master-alb"
-  description = "Jenkins Master ALB security group."
-  vpc_id      = data.aws_vpc.vpc.id
-  tags        = merge({ "Name" : "sgr-jenkins-master-alb" }, var.tags)
-}
-
-resource "aws_security_group_rule" "alb_ingress_http" {
-  security_group_id = aws_security_group.alb_security_group.id
-  from_port         = 80
-  to_port           = 80
-  protocol          = "tcp"
-  type              = "ingress"
-  cidr_blocks       = ["0.0.0.0/0"]
-}
-
-resource "aws_security_group_rule" "alb_ingress_https" {
-  count             = var.route53_zone_name != "" ? 1 : 0
-  security_group_id = aws_security_group.alb_security_group.id
-  from_port         = 443
-  to_port           = 443
-  protocol          = "tcp"
-  type              = "ingress"
-  cidr_blocks       = ["0.0.0.0/0"]
-}
-
-resource "aws_security_group_rule" "alb_egress_all" {
-  security_group_id = aws_security_group.alb_security_group.id
-  from_port         = 0
-  to_port           = 0
-  protocol          = "-1"
-  type              = "egress"
-  cidr_blocks       = ["0.0.0.0/0"]
 }
 
 resource "aws_security_group_rule" "jenkins_master_ingress_alb" {
@@ -84,9 +52,50 @@ resource "aws_security_group_rule" "master_egress_all" {
   cidr_blocks       = ["0.0.0.0/0"]
 }
 
+# ---------------------------------------------------
+# ALB Security Group
+# ---------------------------------------------------
+resource "aws_security_group" "alb_security_group" {
+  name        = "${local.prefix}-jenkins-master-alb-sgr"
+  description = "Jenkins Master ALB security group."
+  vpc_id      = data.aws_vpc.vpc.id
+  tags        = merge({ "Name" : "sgr-jenkins-master-alb" }, var.tags)
+}
 
+resource "aws_security_group_rule" "alb_ingress_http" {
+  security_group_id = aws_security_group.alb_security_group.id
+  from_port         = 80
+  to_port           = 80
+  protocol          = "tcp"
+  type              = "ingress"
+  cidr_blocks       = ["0.0.0.0/0"]
+}
+
+resource "aws_security_group_rule" "alb_ingress_https" {
+  count             = var.route53_zone_name != "" ? 1 : 0
+  security_group_id = aws_security_group.alb_security_group.id
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
+  type              = "ingress"
+  cidr_blocks       = ["0.0.0.0/0"]
+}
+
+resource "aws_security_group_rule" "alb_egress_all" {
+  security_group_id = aws_security_group.alb_security_group.id
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  type              = "egress"
+  cidr_blocks       = ["0.0.0.0/0"]
+}
+
+
+# ---------------------------------------------------
+# Jenkins Agent Security Group
+# ---------------------------------------------------
 resource "aws_security_group" "jenkins_agents" {
-  name        = "sgr-jenkins-agents"
+  name        = "${local.prefix}-jenkins-agents-sgr"
   description = "Security group attached to Jenkins agents running in Fargate."
   vpc_id      = data.aws_vpc.vpc.id
   tags        = merge({ "Name" : "sgr-jenkins-agents" }, var.tags)
@@ -101,7 +110,9 @@ resource "aws_security_group_rule" "jenkins_agent_egress" {
   cidr_blocks       = ["0.0.0.0/0"]
 }
 
-### EFS
+# ---------------------------------------------------
+# EFS Security Group
+# ---------------------------------------------------
 resource "aws_security_group" "efs" {
   name        = "sgr-jenkins-master-efs"
   description = "Jenkins Master EFS security group."
