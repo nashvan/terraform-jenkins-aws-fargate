@@ -1,0 +1,4 @@
+[
+    {"folder": "jasc-common", "name": "jenkins-dokcer-master-image", "script": "jenkins/Jenkinsfile", "trigger": "manual", "repo": "git@github.com:nashvan/docker_images.git" , "timer":"15m" },
+    {"folder": "jasc-common", "name": "jenkins-docker-agent-image", "script": "jenkins_agent/Jenkinsfile", "trigger": "manual", "repo": "git@github.com:nashvan/docker_images.git" , "timer":"15m" }
+]

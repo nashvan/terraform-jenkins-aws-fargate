@@ -1,5 +1,4 @@
 locals {
-  # account_id              = data.aws_caller_identity.current.account_id
   app_name                = "jenkins"
   application_id          = "APID001"
   cost_centre             = "CC001"
@@ -14,7 +13,7 @@ locals {
 
   account_configs = {
     develop = {
-      route53_zone_name = "cmcloudlab834.info"
+      route53_zone_name = "cmcloudlab655.info"
     }
 
     sit = {

@@ -1,0 +1,64 @@
+#!/usr/bin/env groovy
+
+/*
+ * Bootstrap will create Jenkins folders and jobs
+ */
+
+pipeline {
+    agent { label 'master' }
+
+    environment {
+        services = ""
+    }  
+
+    options {
+        disableConcurrentBuilds()
+        timestamps()
+        buildDiscarder(logRotator(numToKeepStr: '30'))
+    }
+
+    stages {
+        stage('load app lists') {
+            steps {
+                echo 'loading service/app lists'
+                script {
+                    services = readJSON(file: 'bootstrap/nonprod/resources/services.json')
+                }
+            }
+        }
+
+        stage('create app jobs') {
+            steps {
+                script {
+                    for ( service in services ) {
+                        echo "creating service ${service}"
+                        env.serviceFolder = "AXT/${service.folder}"
+                        env.serviceGitRepo = service.repo
+                        env.serviceName = service.name ?: service.folder
+                        env.scriptPath = service.script
+                        env.repoIndex = service.timer
+                        env.branchIncludes = service.branches ?: '*'
+                        
+                        echo "${env.serviceFolder}, ${env.serviceGitRepo}, ${env.serviceName}"
+                        // This adds limited support for nested folders
+                        jobfolder = ""
+                        for ( element in env.serviceFolder.split(File.separator) ) {
+                            jobfolder = jobfolder.concat(element)
+                            jobDsl scriptText: "folder('${jobfolder}')"
+                            jobfolder = jobfolder.concat(File.separator)
+                        }
+
+                        def template = service.trigger ?: "manual"
+                        if(template == "custom") {
+                            load("bootstrap/nonprod/jobs/${service.folder}/${service.name}.groovy")
+                        }
+                        else {
+                            load("bootstrap/nonprod/jobs/${template}.groovy")
+                        }
+                    }
+                }
+            }
+        }    
+    } 
+    
+} 
