@@ -146,4 +146,18 @@ jobs: # this requires the job-dsl plugin
               }""".stripIndent())
           }
         }
+  - script: > 
+      job('Job_DSL_Seed') {
+        scm {
+          git {
+            remote {
+              url 'ssh://git@github.com:nashvan/jcasc-bootstrap.git'
+            }
+          }
+        }
+        steps {
+          jobDsl {
+            targets 'bootsrap/nonprod/jobs.groovy'
+          }
+        }
       }
